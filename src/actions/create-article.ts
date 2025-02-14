@@ -72,8 +72,7 @@ export const createArticles = async (
 
   // ✅ Fix: Handle image upload properly
   const imageFile = formData.get("featuredImage") as File | null;
-  console.log("image file -----> ",imageFile?.name);
-  
+ 
   if (!imageFile || imageFile?.name === "undefined") {
     return {
       errors: {

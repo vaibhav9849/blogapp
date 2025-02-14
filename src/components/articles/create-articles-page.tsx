@@ -9,11 +9,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { createArticles } from "@/actions/create-article";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-
-const urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT!;
-
-console.log(urlEndpoint);
-
+ 
 export function CreateArticlePage() {
   const [content, setContent] = useState("");
 

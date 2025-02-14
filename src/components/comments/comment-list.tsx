@@ -1,4 +1,4 @@
-import { Comment, Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 type CommentListProps = {

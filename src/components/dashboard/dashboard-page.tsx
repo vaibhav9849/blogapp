@@ -1,4 +1,4 @@
-import { FileText, MessageCircle, PlusCircle, Clock, User } from "lucide-react";
+import { FileText, MessageCircle, PlusCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import RecentArticles from "./recent-articles";

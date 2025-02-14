@@ -110,9 +110,17 @@ export const updateArticles = async (
                 };
             }
         } catch (error) {
-            return {
-                errors: { formErrors: ["Error uploading image. Please try again."] },
-            };
+            if(error instanceof Error){
+                return {
+                    errors:{
+                        formErrors:[error.message]
+                    }
+                }
+            }else{
+                return {
+                    errors: { formErrors: ["Error uploading image. Please try again."] },
+                };
+            }
         }
     }
 
@@ -127,10 +135,18 @@ export const updateArticles = async (
                 featuredImage: imageUrl, // Updated or existing image
             },
         });
-    } catch (error: unknown) {
-        return {
-            errors: { formErrors: ["Failed to update the article. Please try again."] },
-        };
+    } catch (error:unknown) {
+        if(error instanceof Error){
+            return {
+                errors:{
+                    formErrors:[error.message]
+                }
+            }
+        }else{
+            return {
+                errors: { formErrors: ["Failed to update the article. Please try again."] },
+            };
+        }
     }
 
     revalidatePath("/dashboard");

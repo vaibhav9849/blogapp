@@ -1,17 +1,26 @@
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { fetchArticleByQuery } from "@/lib/query/fetch-articles";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"; 
 import { Search } from "lucide-react";
 import Image from "next/image";
+import { Prisma } from "@prisma/client";
 
 type SearchPageProps = {
-  searchText: string;
+  articles: Prisma.ArticlesGetPayload<{
+    include:{
+      author:{
+        select:{
+          name:true,
+          email:true,
+          imageUrl:true
+        }
+      }
+    }
+  }>[];
 };
-export async function AllArticlesPage({ searchText }: SearchPageProps) {
-  const articles = await fetchArticleByQuery(searchText);
 
+export function AllArticlesPage({ articles }: SearchPageProps) {
+ 
   if (articles.length === 0) return <NoSearchResults />;
-
 
   return (
     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -21,15 +30,15 @@ export async function AllArticlesPage({ searchText }: SearchPageProps) {
           className="group relative overflow-hidden transition-all hover:shadow-lg"
         >
           <div className="p-6">
-              {/* Image Container */}
-              <div className="relative mb-4 h-48 w-full overflow-hidden rounded-xl">
-                <Image
-                  src={article.featuredImage as string}
-                  alt={article.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+            {/* Image Container */}
+            <div className="relative mb-4 h-48 w-full overflow-hidden rounded-xl">
+              <Image
+                src={article.featuredImage as string}
+                alt={article.title}
+                fill
+                className="object-cover"
+              />
+            </div>
             {/* Article Content */}
             <h3 className="text-xl font-semibold text-foreground">
               {article.title}
@@ -73,7 +82,7 @@ export function NoSearchResults() {
 
       {/* Description */}
       <p className="mt-2 text-muted-foreground">
-        We couldn't find any articles matching your search. Try a different
+        We could not find any articles matching your search. Try a different
         keyword or phrase.
       </p>
     </div>

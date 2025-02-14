@@ -1,12 +1,5 @@
 "use client";
-import {
-  ChangeEvent,
-  FormEvent,
-  startTransition,
-  useActionState,
-  useEffect,
-  useState,
-} from "react";
+import { FormEvent, startTransition, useActionState, useState } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { Button } from "@/components/ui/button";
@@ -15,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Articles } from "@prisma/client";
 import { updateArticles } from "@/actions/update-article";
+import Image from "next/image";
 
 type EditPropsPage = {
   article: Articles;
@@ -87,10 +81,12 @@ const EditArticlePage: React.FC<EditPropsPage> = ({ article }) => {
               <Label htmlFor="featuredImage">Featured Image</Label>
               {article.featuredImage && (
                 <div className="mb-4">
-                  <img
+                  <Image
                     src={article.featuredImage}
                     alt="Current featured"
-                    className="w-48 h-32 object-cover rounded-md"
+                    width={192}
+                    height={128}  
+                    className="object-cover rounded-md"
                   />
                   <p className="text-sm text-muted-foreground mt-2">
                     Current featured image

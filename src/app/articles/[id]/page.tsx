@@ -1,6 +1,6 @@
 import { ArticleDetailPage } from "@/components/articles/article-detail-page";
 import { prisma } from "@/lib/prisma";
-import React, { Suspense } from "react";
+import React from "react";
 
 type ArticleDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -27,9 +27,7 @@ const page: React.FC<ArticleDetailPageProps> = async ({ params }) => {
   }
   return (
     <div>
-      {/* <Suspense fallback={<h1>Loading...</h1>}> */}
-        <ArticleDetailPage article={article} />
-      {/* </Suspense> */}
+      <ArticleDetailPage article={article} /> 
     </div>
   );
 };

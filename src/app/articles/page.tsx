@@ -1,14 +1,30 @@
-import { AllArticlesPage } from "@/components/articles/all-articles-page";
+import {
+  AllArticlesPage, 
+} from "@/components/articles/all-articles-page";
 import ArticleSearchInput from "@/components/articles/article-search-input";
 import { Button } from "@/components/ui/button";
 import React, { Suspense } from "react";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { fetchArticleByQuery } from "@/lib/query/fetch-articles";
+import Link from "next/link";
 
 type SearchPageProps = {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: { search?: string; page?: string };
 };
 
+const ITEMS_PER_PAGE = 3; // Number of items per page
+
 const page: React.FC<SearchPageProps> = async ({ searchParams }) => {
-  const searchText = (await searchParams).search || "";
+  const searchText = searchParams.search || "";
+  const currentPage = Number(searchParams.page) || 1;
+  const skip = (currentPage - 1) * ITEMS_PER_PAGE;
+  const take = ITEMS_PER_PAGE;
+
+  const { articles, total } = await fetchArticleByQuery(searchText, skip, take);
+  const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
+ 
+
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
@@ -19,30 +35,56 @@ const page: React.FC<SearchPageProps> = async ({ searchParams }) => {
           </h1>
           {/* Search Bar */}
           <Suspense>
-          <ArticleSearchInput />
+            <ArticleSearchInput />
           </Suspense>
         </div>
         {/* All article page  */}
-        <Suspense fallback={<AllArticlesPageSkeleton />}>
-          <AllArticlesPage searchText={searchText} />
+        <Suspense fallback={<AllArticlesPageSkeleton/>}>
+        <AllArticlesPage articles={articles} />
         </Suspense>
+        {/* <AllArticlesPageSkeleton/> */}
         {/* Pagination */}
         <div className="mt-12 flex justify-center gap-2">
-          <Button variant="ghost" size="sm">
-            ← Prev
-          </Button>
-          <Button variant="outline" size="sm">
-            1
-          </Button>
-          <Button variant="ghost" size="sm">
-            2
-          </Button>
-          <Button variant="ghost" size="sm">
-            3
-          </Button>
-          <Button variant="ghost" size="sm">
-            Next →
-          </Button>
+          {/* Prev Button */}
+          <Link
+            href={`?search=${searchText}&page=${currentPage - 1}`}
+            passHref
+          >
+            <Button variant="ghost" size="sm" disabled={currentPage === 1}>
+              ← Prev
+            </Button>
+          </Link>
+
+          {/* Page Numbers */}
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <Link
+              key={index}
+              href={`?search=${searchText}&page=${index + 1}`}
+              passHref
+            >
+              <Button
+                variant={`${currentPage === index + 1 ? 'destructive' : 'ghost'}`}
+                size="sm"
+                disabled={currentPage === index + 1}
+              >
+                {index + 1}
+              </Button>
+            </Link>
+          ))}
+
+          {/* Next Button */}
+          <Link
+            href={`?search=${searchText}&page=${currentPage + 1}`}
+            passHref
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={currentPage === totalPages}
+            >
+              Next →
+            </Button>
+          </Link>
         </div>
       </main>
     </div>
@@ -50,9 +92,6 @@ const page: React.FC<SearchPageProps> = async ({ searchParams }) => {
 };
 
 export default page;
-
-import { Card } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export function AllArticlesPageSkeleton() {
   return (

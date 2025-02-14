@@ -11,7 +11,7 @@ export async function toggleLike(articleId : string) {
 
 
   // Ensure the user exists in the database
-  let user = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { clerkUserId: userId },
   });
 
